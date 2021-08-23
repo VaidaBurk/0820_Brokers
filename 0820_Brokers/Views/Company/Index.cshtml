@@ -1,0 +1,39 @@
+﻿@model IEnumerable<_0820_Brokers.Models.CompanyModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>List of companies in database</h1>
+
+<p>
+    <a asp-action="DisplayCreate">Add New Company</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Id</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StreetAddress)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CompanyId)
+            </td>
+            <td>
+                @Html.ActionLink("Add Broker", "DisplayAddBroker", new { companyId = item.CompanyId })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

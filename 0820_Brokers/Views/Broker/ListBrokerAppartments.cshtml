@@ -1,0 +1,39 @@
+﻿@model IEnumerable<_0820_Brokers.Models.HouseModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Appartments in Database</h1>
+
+<p>
+    <a asp-action="Create">Add New Appartment</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>City</th>
+            <th>Address</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.City)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FullAddress)
+            </td>
+            <td></td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,27 @@
+﻿@model CompanyCreateModel
+
+@{
+    ViewData["Title"] = "Add Broker";
+}
+
+<h3>Add Broker to Company</h3>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddBroker">
+            <div class="form-group">
+                <label asp-for="BrokerModels" class="control-label">Brokers</label>
+                <div>
+                    @Html.DropDownListFor(model => model.BrokerIds, new MultiSelectList(Model.BrokerModels, "BrokerId", "FullName"), new { multiple = "multiple", @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Add" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

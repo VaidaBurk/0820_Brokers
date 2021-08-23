@@ -1,0 +1,35 @@
+﻿@model List<BrokerModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Brokers</h1>
+
+<p>
+    <a asp-action="DisplayCreate">Add New Broker</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Surname</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Surname)
+            </td>
+            <td>
+                @Html.ActionLink("Appartments", "ListBrokerAppartments", new { BrokerId=item.BrokerId })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

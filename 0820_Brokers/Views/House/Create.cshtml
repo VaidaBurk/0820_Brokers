@@ -1,0 +1,65 @@
+﻿@model HouseCreateModel
+
+@{
+    ViewData["Title"] = "View";
+}
+
+<h3>Add New House</h3>
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Create">
+            <div class="row form-group">
+                <div class="col-4">
+                    <label asp-for="@Model.House.City" class="control-label"></label>
+                    <input asp-for="@Model.House.City" class="form-control" />
+                </div>
+                <div class="col-4">
+                    <label asp-for="@Model.House.Street" class="control-label"></label>
+                    <input asp-for="@Model.House.Street" class="form-control" />
+                </div>
+                <div class="col-2">
+                    <label asp-for="@Model.House.HouseNo" class="control-label">House No.</label>
+                    <input asp-for="@Model.House.HouseNo" class="form-control" />
+                </div>
+                <div class="col-2">
+                    <label asp-for="@Model.House.FlatNo" class="control-label">Flat No.</label>
+                    <input asp-for="@Model.House.FlatNo" class="form-control" />
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-2">
+                    <label asp-for="@Model.House.FlatFloor" class="control-label">Flat Floor</label>
+                    <input asp-for="@Model.House.FlatFloor" class="form-control" />
+                </div>
+                <div class="col-3">
+                    <label asp-for="@Model.House.BuildingFloors" class="control-label">Floors in Building</label>
+                    <input asp-for="@Model.House.BuildingFloors" class="form-control" />
+                </div>
+                <div class="col-3">
+                    <label asp-for="@Model.House.Area" class="control-label"></label>
+                    <input asp-for="@Model.House.Area" class="form-control" />
+                </div>
+            </div>
+            <div class="row form-group">
+                @*<div class="col-6">
+                    <label asp-for="@Model.House.BrokerId" class="control-label">Broker</label>
+                    <div>
+                        @Html.DropDownListFor(model => model.House.BrokerId, new SelectList(Model.BrokerModels, "BrokerId", "FullName"), new { @class = "form-control" })
+                    </div>
+                </div>*@
+                <div class="col-6">
+                    <label asp-for="@Model.House.CompanyId" class="control-label">Company</label>
+                    @Html.DropDownListFor(model => model.House.CompanyId, new SelectList(Model.CompanyModels, "CompanyId", "Name"), new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Add" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
