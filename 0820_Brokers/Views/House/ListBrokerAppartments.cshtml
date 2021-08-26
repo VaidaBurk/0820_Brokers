@@ -1,0 +1,37 @@
+﻿@model BrokerHousesModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+<h1>Appartments</h1>
+
+@Html.ActionLink("Assign Appartment to Broker", "DisplayPossibleAppartments", "Broker", new { brokerId = Model.BrokerId })
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>City</th>
+            <th>Address</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Houses)
+        {
+            <tr>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.City)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FullAddress)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

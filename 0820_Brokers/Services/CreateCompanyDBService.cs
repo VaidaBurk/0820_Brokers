@@ -28,7 +28,7 @@ namespace _0820_Brokers.Services
             };
         }
 
-        public CompanyCreateModel SelectedCompany(int companyId)
+        public CompanyCreateModel SelectCompanyWithPossibleBrokers(int companyId)
         {
             return new CompanyCreateModel
             {

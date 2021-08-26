@@ -32,5 +32,12 @@ namespace _0820_Brokers.Controllers
             _houseDBService.SaveToDatabase(house);
             return View();
         }
+        public IActionResult ListBrokerAppartments(int brokerId)
+        {
+            List<HouseModel> houses = _houseDBService.GetBrokerAppartmentsFromDB(brokerId);
+            BrokerHousesModel brokerHouses = new(houses, brokerId);
+            return View(brokerHouses);
+        }
+
     }
 }

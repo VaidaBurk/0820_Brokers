@@ -66,6 +66,61 @@ namespace _0820_Brokers.Services
             _connection.Close();
             return notCompanyBrokers;
         }
+        
 
+        public List<HouseModel> HousesBrokerCanChoose(int brokerId)
+        {
+            List<HouseModel> houses = new();
+            _connection.Open();
+            SqlCommand command = new($@"SELECT *, CONCAT(Street, ' ', HouseNo, '- ', FlatNo)
+                                        FROM Houses h
+                                        LEFT JOIN CompanyBroker cb
+                                        ON h.CompanyId = cb.CompanyId
+                                        WHERE h.BrokerId IS NULL AND cb.BrokerId = {brokerId};", _connection);
+            using var Reader = command.ExecuteReader();
+            while (Reader.Read())
+            {
+                houses.Add(new()
+                {
+                    FlatId = Reader.GetInt32(0),
+                    City = Reader.GetString(1),
+                    Street = Reader.GetString(2),
+                    HouseNo = Reader.GetString(3),
+                    FlatNo = Reader.GetString(4),
+                    FlatFloor = Reader.GetInt32(5),
+                    BuildingFloors = Reader.GetInt32(6),
+                    Area = Reader.GetDecimal(7),
+                    CompanyId = Reader.GetInt32(9),
+                    FullAddress = Reader.GetString(12)
+                });
+            }
+            _connection.Close();
+            return houses;
+        }
+        public void AssignAppartmentToBroker(int houseId, int brokerId)
+        {
+            _connection.Open();
+            SqlCommand command = new($@"UPDATE Houses
+                                        SET BrokerId = {brokerId}
+                                        WHERE FlatId = {houseId};", _connection);
+            command.ExecuteNonQuery();
+            _connection.Close();
+        }
+        //public List<int> GetBrokerCompanies (int brokerId)
+        //{
+        //    List<int> companiesId = new();
+        //    _connection.Open();
+        //    SqlCommand command = new($@"SELECT CompanyId
+        //                                FROM CompanyBroker
+        //                                WHERE BrokerId = {brokerId}", _connection);
+        //    using var Reader = command.ExecuteReader();
+        //    while (Reader.Read())
+        //    {
+        //        companiesId.Add(Reader.GetInt32(0));
+        //    }
+        //    _connection.Close();
+        //    return companiesId;
+        //}
     }
+
 }

@@ -53,6 +53,34 @@ namespace _0820_Brokers.Services
             command.ExecuteNonQuery();
             _connection.Close();
         }
+        public List<HouseModel> GetBrokerAppartmentsFromDB(int brokerId)
+        {
+            List<HouseModel> brokerAppartments = new();
+            _connection.Open();
+            SqlCommand command = new($@"SELECT *, CONCAT(Street, ' ', HouseNo, '- ', FlatNo)
+                                        FROM Houses
+                                        WHERE BrokerId = {brokerId};", _connection);
+            using var Reader = command.ExecuteReader();
+            while (Reader.Read())
+            {
+                brokerAppartments.Add(new()
+                {
+                    FlatId = Reader.GetInt32(0),
+                    City = Reader.GetString(1),
+                    Street = Reader.GetString(2),
+                    HouseNo = Reader.GetString(3),
+                    FlatNo = Reader.GetString(4),
+                    FlatFloor = Reader.GetInt32(5),
+                    BuildingFloors = Reader.GetInt32(6),
+                    Area = Reader.GetDecimal(7),
+                    BrokerId = Reader.GetInt32(8),
+                    CompanyId = Reader.GetInt32(9),
+                    FullAddress = Reader.GetString(10)
+                });
+            }
+            _connection.Close();
+            return brokerAppartments;
+        }
 
     }
 }

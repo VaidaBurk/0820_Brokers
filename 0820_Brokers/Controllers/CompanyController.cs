@@ -34,8 +34,14 @@ namespace _0820_Brokers.Controllers
         }
         public IActionResult DisplayAddBroker(int companyId)
         {
-            CompanyCreateModel selectedCompany = _createCompanyDBService.SelectedCompany(companyId);
+            CompanyCreateModel selectedCompany = _createCompanyDBService.SelectCompanyWithPossibleBrokers(companyId);
+            selectedCompany.Company.CompanyId = companyId;
             return View("AddBroker", selectedCompany);
+        }
+        public IActionResult AddBroker(CompanyCreateModel selectedCompany)
+        {
+            _companyDBService.SaveBrokerToCompany(selectedCompany);
+            return RedirectToAction("Index");
         }
     }
 }

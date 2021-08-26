@@ -1,0 +1,34 @@
+﻿@model BrokerHousesModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+<h1>Appartments</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>City</th>
+            <th>Address</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Houses)
+        {
+            <tr>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.City)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FullAddress)
+                </td>
+                <td>
+                    @Html.ActionLink("Add", "AssignAppartmentToBroker", "Broker", new { houseId=item.FlatId, brokerId = Model.BrokerId })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

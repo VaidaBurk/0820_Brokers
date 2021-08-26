@@ -55,14 +55,14 @@ namespace _0820_Brokers.Services
             }
         }
 
-        public void SaveBrokerToCompany(CompanyCreateModel selectedCompany)
+        public void SaveBrokerToCompany(CompanyCreateModel company)
         {
-            foreach (int entry in selectedCompany.BrokerIds)
+            foreach (int entry in company.BrokerIds)
             {
                 _connection.Open();
 
                 SqlCommand command = new($@"INSERT INTO CompanyBroker (CompanyId, BrokerId) 
-                                VALUES ('{selectedCompany.Company.CompanyId}', '{entry}');", _connection);
+                                VALUES ('{company.Company.CompanyId}', '{entry}');", _connection);
                 command.ExecuteNonQuery();
                 _connection.Close();
             }
@@ -99,5 +99,6 @@ namespace _0820_Brokers.Services
             return companies;
         }
 
+       
     }
 }

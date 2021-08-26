@@ -27,7 +27,7 @@
                 @Html.DisplayFor(modelItem => item.Surname)
             </td>
             <td>
-                @Html.ActionLink("Appartments", "ListBrokerAppartments", new { BrokerId=item.BrokerId })
+                @Html.ActionLink("Appartments", "ListBrokerAppartments", "House", new { brokerId=item.BrokerId })
             </td>
         </tr>
 }
