@@ -14,6 +14,7 @@
         <tr>
             <th>Name</th>
             <th>Surname</th>
+            <th>Companies</th>
             <th></th>
         </tr>
     </thead>
@@ -27,7 +28,10 @@
                 @Html.DisplayFor(modelItem => item.Surname)
             </td>
             <td>
-                @Html.ActionLink("Appartments", "ListBrokerAppartments", "House", new { brokerId=item.BrokerId })
+                @Html.DisplayFor(modelItem => item.Company)
+            </td>
+            <td>
+                @Html.ActionLink("Appartments", "ListBrokerAppartments", "House", new { brokerId = item.BrokerId })
             </td>
         </tr>
 }

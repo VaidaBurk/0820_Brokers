@@ -18,10 +18,12 @@ namespace _0820_Brokers.Services
         {
             List<HouseModel> houses = new();
             _connection.Open();
-            SqlCommand command = new($@"SELECT h.*, CONCAT(h.Street, ' ', h.HouseNo, '- ', h.FlatNo), c.Name
+            SqlCommand command = new($@"SELECT h.*, CONCAT(h.Street, ' ', h.HouseNo, '- ', h.FlatNo), c.Name, CONCAT(b.Name, ' ', b.Surname)
                                         FROM Houses h
-                                        JOIN Companies c
-                                        ON h.CompanyId = c.CompanyId;", _connection);
+                                        LEFT JOIN Companies c
+                                        ON h.CompanyId = c.CompanyId
+                                        LEFT JOIN Brokers b
+                                        ON h.BrokerId = b.BrokerId;", _connection);
             using var Reader = command.ExecuteReader();
             while (Reader.Read())
             {
@@ -37,7 +39,8 @@ namespace _0820_Brokers.Services
                     Area = Reader.GetDecimal(7),
                     CompanyId = Reader.GetInt32(9),
                     FullAddress = Reader.GetString(10),
-                    CompanyName = Reader.GetString(11)
+                    CompanyName = Reader.GetString(11),
+                    Broker = Reader.GetString(12)
                 });
             }
             _connection.Close();

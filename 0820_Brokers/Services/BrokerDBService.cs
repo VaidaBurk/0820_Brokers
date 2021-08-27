@@ -18,8 +18,13 @@ namespace _0820_Brokers.Services
         {
             List<BrokerModel> Brokers = new();
             _connection.Open();
-            SqlCommand command = new($@"SELECT BrokerId, Name, Surname, CONCAT(Name, ' ', Surname) AS FullName
-                                        FROM Brokers;", _connection);
+            SqlCommand command = new($@"SELECT b.*, CONCAT(b.Name, ' ', b.Surname) AS FullName, STRING_AGG(c.Name, ', ') AS Companies
+                                        FROM Brokers b
+                                        JOIN CompanyBroker cb
+                                        ON b.BrokerId = cb.BrokerId
+                                        JOIN Companies c
+                                        ON cb.CompanyId = c.CompanyId
+                                        GROUP BY b.BrokerId, b.Name, b.Surname;", _connection);
             using var Reader = command.ExecuteReader();
             while (Reader.Read())
             {
@@ -28,7 +33,8 @@ namespace _0820_Brokers.Services
                     BrokerId = Reader.GetInt32(0),
                     Name = Reader.GetString(1),
                     Surname = Reader.GetString(2),
-                    FullName = Reader.GetString(3)
+                    FullName = Reader.GetString(3),
+                    Company = Reader.GetString(4)
                 });
             }
             _connection.Close();
@@ -47,11 +53,12 @@ namespace _0820_Brokers.Services
         {
             List<BrokerModel> notCompanyBrokers = new();
             _connection.Open();
-            SqlCommand command = new($@"SELECT b.BrokerId, b.Name, b.Surname, CONCAT(Name, ' ', Surname) AS FullName, cs.CompanyId
+            SqlCommand command = new($@"SELECT b.BrokerId, b.Name, b.Surname, CONCAT(Name, ' ', Surname) AS FullName
                                         FROM brokers b
                                         LEFT JOIN CompanyBroker cs
                                         ON b.BrokerId = cs.BrokerId
-                                        WHERE cs.CompanyId != {companyId} OR cs.CompanyId IS NULL;", _connection);
+                                        WHERE cs.CompanyId != {companyId} OR cs.CompanyId IS NULL
+                                        GROUP BY b.BrokerId, b.Name, b.Surname;", _connection);
             using var Reader = command.ExecuteReader();
             while (Reader.Read())
             {
@@ -72,10 +79,12 @@ namespace _0820_Brokers.Services
         {
             List<HouseModel> houses = new();
             _connection.Open();
-            SqlCommand command = new($@"SELECT *, CONCAT(Street, ' ', HouseNo, '- ', FlatNo)
+            SqlCommand command = new($@"SELECT h.*, CONCAT(h.Street, ' ', h.HouseNo, '- ', h.FlatNo), c.Name
                                         FROM Houses h
                                         LEFT JOIN CompanyBroker cb
                                         ON h.CompanyId = cb.CompanyId
+                                        JOIN Companies c
+                                        ON cb.CompanyId = c.CompanyId
                                         WHERE h.BrokerId IS NULL AND cb.BrokerId = {brokerId};", _connection);
             using var Reader = command.ExecuteReader();
             while (Reader.Read())
@@ -91,7 +100,8 @@ namespace _0820_Brokers.Services
                     BuildingFloors = Reader.GetInt32(6),
                     Area = Reader.GetDecimal(7),
                     CompanyId = Reader.GetInt32(9),
-                    FullAddress = Reader.GetString(12)
+                    FullAddress = Reader.GetString(10),
+                    CompanyName = Reader.GetString(11)
                 });
             }
             _connection.Close();

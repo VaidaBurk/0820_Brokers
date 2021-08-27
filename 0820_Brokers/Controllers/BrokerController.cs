@@ -11,11 +11,9 @@ namespace _0820_Brokers.Controllers
     public class BrokerController : Controller
     {
         private BrokerDBService _brokerDBService;
-        private CompanyDBService _companyDBService;
-        public BrokerController(BrokerDBService brokerDBService, CompanyDBService companyDBService)
+        public BrokerController(BrokerDBService brokerDBService)
         {
             _brokerDBService = brokerDBService;
-            _companyDBService = companyDBService;
         }
         public IActionResult Index()
         {
@@ -43,7 +41,7 @@ namespace _0820_Brokers.Controllers
         public IActionResult AssignAppartmentToBroker(int houseId, int brokerId)
         {
             _brokerDBService.AssignAppartmentToBroker(houseId, brokerId);
-            return RedirectToAction("ListBrokerAppartments", "House", brokerId);
+            return RedirectToAction("ListBrokerAppartments", "House", new { brokerId = brokerId } );
         }
     }
 }

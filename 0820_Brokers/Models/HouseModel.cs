@@ -19,5 +19,6 @@ namespace _0820_Brokers.Models
         public int CompanyId { get; set; }
         public string FullAddress { get; set; }
         public string CompanyName { get; set; }
+        public string Broker { get; set; }
     }
 }

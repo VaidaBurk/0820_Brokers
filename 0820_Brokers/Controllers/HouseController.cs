@@ -30,7 +30,7 @@ namespace _0820_Brokers.Controllers
         public IActionResult Create(HouseModel house)
         {
             _houseDBService.SaveToDatabase(house);
-            return View();
+            return RedirectToAction("Index");
         }
         public IActionResult ListBrokerAppartments(int brokerId)
         {

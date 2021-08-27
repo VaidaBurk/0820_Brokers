@@ -11,24 +11,28 @@
         <tr>
             <th>City</th>
             <th>Address</th>
+            <th>Company</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model.Houses)
         {
-            <tr>
+        <tr>
 
-                <td>
-                    @Html.DisplayFor(modelItem => item.City)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FullAddress)
-                </td>
-                <td>
-                    @Html.ActionLink("Add", "AssignAppartmentToBroker", "Broker", new { houseId=item.FlatId, brokerId = Model.BrokerId })
-                </td>
-            </tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.City)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FullAddress)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CompanyName)
+            </td>
+            <td>
+                @Html.ActionLink("Add", "AssignAppartmentToBroker", "Broker", new { houseId = item.FlatId, brokerId = Model.BrokerId })
+            </td>
+        </tr>
         }
     </tbody>
 </table>
