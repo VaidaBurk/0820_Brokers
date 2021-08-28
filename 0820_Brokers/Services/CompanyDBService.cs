@@ -98,7 +98,82 @@ namespace _0820_Brokers.Services
             _connection.Close();
             return companies;
         }
+        public List<BrokerModel> GetCompanyBrokers(int companyId)
+        {
+            List<BrokerModel> companyBrokers = new();
+            _connection.Open();
+            SqlCommand command = new($@"SELECT b.BrokerId, b.Name, b.Surname, CONCAT(Name, ' ', Surname) AS FullName
+                                        FROM brokers b
+                                        LEFT JOIN CompanyBroker cs
+                                        ON b.BrokerId = cs.BrokerId
+                                        WHERE cs.CompanyId = {companyId}
+                                        GROUP BY b.BrokerId, b.Name, b.Surname;", _connection);
+            using var Reader = command.ExecuteReader();
+            while (Reader.Read())
+            {
+                companyBrokers.Add(new()
+                {
+                    BrokerId = Reader.GetInt32(0),
+                    Name = Reader.GetString(1),
+                    Surname = Reader.GetString(2),
+                    FullName = Reader.GetString(3),
+                });
+            }
+            _connection.Close();
+            return companyBrokers;
+        }
+        public string GetCompanyName(int companyId)
+        {
+            _connection.Open();
+            SqlCommand command = new($@"SELECT Name
+                                        FROM Companies
+                                        WHERE CompanyId = {companyId}", _connection);
+            string companyName = command.ExecuteScalar().ToString();
+            _connection.Close();
+            return companyName;
+        }
+        public void RemoveBrokerFromCompany(int brokerId, int companyId)
+        {
+            _connection.Open();
+            SqlCommand command = new($@"DELETE FROM CompanyBroker
+                                        WHERE CompanyId = {companyId} AND BrokerId = {brokerId};", _connection);
+            command.ExecuteNonQuery();
+            _connection.Close();
+        }
+        public List<HouseModel> GetCompanyAppartmentsFromDB(int companyId)
+        {
+            List<HouseModel> companyAppartments = new();
+            _connection.Open();
+            SqlCommand command = new($@"SELECT h.*, CONCAT(h.Street, ' ', h.HouseNo, '- ', h.FlatNo) AS FullAddress, c.Name, CONCAT(b.Name, ' ', b.Surname) AS BrokerName
+                                        FROM Houses h
+                                        LEFT JOIN Companies c
+                                        ON h.CompanyId = c.CompanyId
+                                        LEFT JOIN Brokers b
+                                        ON h.BrokerId = b.BrokerId
+                                        WHERE c.CompanyId = {companyId};", _connection);
+            using var Reader = command.ExecuteReader();
+            while (Reader.Read())
+            {
+                companyAppartments.Add(new()
+                {
+                    FlatId = Reader.GetInt32(0),
+                    City = Reader.GetString(1),
+                    Street = Reader.GetString(2),
+                    HouseNo = Reader.GetString(3),
+                    FlatNo = Reader.GetString(4),
+                    FlatFloor = Reader.GetInt32(5),
+                    BuildingFloors = Reader.GetInt32(6),
+                    Area = Reader.GetDecimal(7),
+                    //BrokerId = Reader.GetInt32(8),
+                    CompanyId = Reader.GetInt32(9),
+                    FullAddress = Reader.GetString(10),
+                    CompanyName = Reader.GetString(11),
+                    Broker = Reader.GetString(12)
+                });
+            }
+            _connection.Close();
+            return companyAppartments;
+        }
 
-       
     }
 }

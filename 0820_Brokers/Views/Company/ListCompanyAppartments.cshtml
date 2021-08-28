@@ -1,20 +1,17 @@
-﻿@model BrokerHousesModel
+﻿@model CompanyHousesModel
 
 @{
     ViewData["Title"] = "Index";
 }
-<h1>Appartments @Model.BrokerName can manage</h1>
-
-<p>
-    <a asp-action="Index">Back to List</a>
-</p>
+<h1>Appartments of @Model.CompanyName</h1>
 
 <table class="table">
     <thead>
         <tr>
             <th>City</th>
             <th>Address</th>
-            <th>Company</th>
+            <th>Area</th>
+            <th>Broker</th>
             <th></th>
         </tr>
     </thead>
@@ -30,11 +27,14 @@
                 @Html.DisplayFor(modelItem => item.FullAddress)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CompanyName)
+                @Html.DisplayFor(modelItem => item.Area)
             </td>
             <td>
-                @Html.ActionLink("Choose", "AssignAppartmentToBroker", "Broker", new { houseId = item.FlatId, brokerId = Model.BrokerId })
+                @Html.DisplayFor(modelItem => item.Broker)
             </td>
+            <td>
+            @Html.ActionLink("Change Broker", "ChangeBroker", new { houseId=item.FlatId })
+        </td>
         </tr>
         }
     </tbody>

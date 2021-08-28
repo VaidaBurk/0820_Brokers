@@ -43,5 +43,24 @@ namespace _0820_Brokers.Controllers
             _companyDBService.SaveBrokerToCompany(selectedCompany);
             return RedirectToAction("Index");
         }
+        public IActionResult ListCompanyBrokers(int companyId)
+        {
+            List<BrokerModel> brokers = _companyDBService.GetCompanyBrokers(companyId);
+            string companyName = _companyDBService.GetCompanyName(companyId);
+            CompanyBrokersModel companyWithBrokers = new(companyId, companyName, brokers);
+            return View(companyWithBrokers);
+        }
+        public IActionResult RemoveBrokerFromCompany(int brokerId, int companyId)
+        {
+            _companyDBService.RemoveBrokerFromCompany(brokerId, companyId);
+            return RedirectToAction("ListCompanyBrokers", new { companyId });
+        }
+        public IActionResult ListCompanyAppartments(int companyId)
+        {
+            List<HouseModel> houses = _companyDBService.GetCompanyAppartmentsFromDB(companyId);
+            string companyName = _companyDBService.GetCompanyName(companyId);
+            CompanyHousesModel companyHouses = new(houses, companyId, companyName);
+            return View(companyHouses);
+        }
     }
 }

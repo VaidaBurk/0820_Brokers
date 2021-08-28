@@ -1,0 +1,58 @@
+﻿@model HouseModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit Appartment</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="EditAppartment">
+            <div class="row form-group">
+                <div class="col-4">
+                    <label asp-for="@Model.FlatId" class="control-label"></label>
+                    <input asp-for="@Model.FlatId" class="form-control" readonly/>
+                </div>
+                <div class="col-4">
+                    <label asp-for="@Model.City" class="control-label"></label>
+                    <input asp-for="@Model.City" class="form-control" />
+                </div>
+                <div class="col-4">
+                    <label asp-for="@Model.Street" class="control-label"></label>
+                    <input asp-for="@Model.Street" class="form-control" />
+                </div>
+                <div class="col-2">
+                    <label asp-for="@Model.HouseNo" class="control-label">House No.</label>
+                    <input asp-for="@Model.HouseNo" class="form-control" />
+                </div>
+                <div class="col-2">
+                    <label asp-for="@Model.FlatNo" class="control-label">Flat No.</label>
+                    <input asp-for="@Model.FlatNo" class="form-control" />
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-2">
+                    <label asp-for="@Model.FlatFloor" class="control-label">Flat Floor</label>
+                    <input asp-for="@Model.FlatFloor" class="form-control" />
+                </div>
+                <div class="col-3">
+                    <label asp-for="@Model.BuildingFloors" class="control-label">Floors in Building</label>
+                    <input asp-for="@Model.BuildingFloors" class="form-control" />
+                </div>
+                <div class="col-3">
+                    <label asp-for="@Model.Area" class="control-label"></label>
+                    <input asp-for="@Model.Area" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

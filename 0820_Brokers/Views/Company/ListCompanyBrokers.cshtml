@@ -1,0 +1,35 @@
+﻿@model CompanyBrokersModel
+
+@{
+    ViewData["Title"] = "ListCompanyBrokers";
+}
+
+<h1>Brokers in @Model.CompanyName</h1>
+
+<p>
+    <a asp-action="Index">Back To List</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Broker ID</th>
+            <th>Full Name</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Brokers) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.BrokerId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FullName)
+            </td>
+            <td>
+                @Html.ActionLink("Remove From Company", "RemoveBrokerFromCompany", new { brokerId=item.BrokerId, companyId=@Model.CompanyId })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Appartments in Database</h1>
+<h1>Appartments</h1>
 
 <p>
     <a asp-action="DisplayCreate">Add New Appartment</a>
@@ -35,9 +35,9 @@
                 @Html.DisplayFor(modelItem => item.Broker)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                @Html.ActionLink("Edit", "DisplayEditAppartment", new { houseId=item.FlatId }) |
+                @Html.ActionLink("Details", "DetailAppartment", new { houseId = item.FlatId}) |
+                @Html.ActionLink("Delete", "DeleteAppartment", new { houseId=item.FlatId })
             </td>
         </tr>
 }

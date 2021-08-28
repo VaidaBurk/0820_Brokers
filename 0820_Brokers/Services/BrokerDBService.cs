@@ -58,7 +58,8 @@ namespace _0820_Brokers.Services
                                         LEFT JOIN CompanyBroker cs
                                         ON b.BrokerId = cs.BrokerId
                                         WHERE cs.CompanyId != {companyId} OR cs.CompanyId IS NULL
-                                        GROUP BY b.BrokerId, b.Name, b.Surname;", _connection);
+                                        GROUP BY b.BrokerId, b.Name, b.Surname
+                                        ORDER BY b.Surname;", _connection);
             using var Reader = command.ExecuteReader();
             while (Reader.Read())
             {
@@ -67,7 +68,7 @@ namespace _0820_Brokers.Services
                     BrokerId = Reader.GetInt32(0),
                     Name = Reader.GetString(1),
                     Surname = Reader.GetString(2),
-                    FullName = Reader.GetString(3)
+                    FullName = Reader.GetString(3),
                 });
             }
             _connection.Close();
@@ -116,21 +117,43 @@ namespace _0820_Brokers.Services
             command.ExecuteNonQuery();
             _connection.Close();
         }
-        //public List<int> GetBrokerCompanies (int brokerId)
-        //{
-        //    List<int> companiesId = new();
-        //    _connection.Open();
-        //    SqlCommand command = new($@"SELECT CompanyId
-        //                                FROM CompanyBroker
-        //                                WHERE BrokerId = {brokerId}", _connection);
-        //    using var Reader = command.ExecuteReader();
-        //    while (Reader.Read())
-        //    {
-        //        companiesId.Add(Reader.GetInt32(0));
-        //    }
-        //    _connection.Close();
-        //    return companiesId;
-        //}
+        public string GetBrokerName(int brokerId)
+        {
+            _connection.Open();
+            SqlCommand command = new($@"SELECT CONCAT(Name, ' ', Surname) AS FullName
+                                        FROM Brokers
+                                        WHERE BrokerId = {brokerId}", _connection);
+            string fullName = command.ExecuteScalar().ToString();
+            _connection.Close();
+            return fullName;
+        }
+
+        public BrokerModel GetBrokerData(int brokerId)
+        {
+            BrokerModel broker = new();
+            _connection.Open();
+            SqlCommand command = new($@"SELECT *
+                                        FROM Brokers
+                                        WHERE BrokerId = {brokerId};", _connection);
+            using (var reader = command.ExecuteReader())
+            {
+                reader.Read();
+                broker.BrokerId = reader.GetInt32(0);
+                broker.Name = reader.GetString(1);
+                broker.Surname = reader.GetString(2);
+            }
+            _connection.Close();
+            return broker;
+        }
+        public void EditBrokerInDatabase(BrokerModel broker)
+        {
+            _connection.Open();
+            SqlCommand command = new($@"UPDATE Brokers
+                                        SET Name = '{broker.Name}', Surname = '{broker.Surname}' 
+                                        WHERE BrokerId = {broker.BrokerId};", _connection);
+            command.ExecuteNonQuery();
+            _connection.Close();
+        }
     }
 
 }

@@ -9,10 +9,12 @@ namespace _0820_Brokers.Models
     {
         public List<HouseModel> Houses { get; set; }
         public int BrokerId { get; set; }
-        public BrokerHousesModel(List<HouseModel> houses, int brokerId)
+        public string BrokerName { get; set; }
+        public BrokerHousesModel(List<HouseModel> houses, int brokerId, string brokerName)
         {
             Houses = houses;
             BrokerId = brokerId;
+            BrokerName = brokerName;
         }
     }
 }

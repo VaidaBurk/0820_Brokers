@@ -60,9 +60,13 @@ namespace _0820_Brokers.Services
         {
             List<HouseModel> brokerAppartments = new();
             _connection.Open();
-            SqlCommand command = new($@"SELECT *, CONCAT(Street, ' ', HouseNo, '- ', FlatNo)
-                                        FROM Houses
-                                        WHERE BrokerId = {brokerId};", _connection);
+            SqlCommand command = new($@"SELECT h.*, CONCAT(h.Street, ' ', h.HouseNo, '- ', h.FlatNo) AS FullAddress, c.Name, CONCAT(b.Name, ' ', b.Surname) AS BrokerName
+                                        FROM Houses h
+                                        JOIN Brokers b
+                                        ON h.BrokerId = b.BrokerId
+                                        JOIN Companies c
+                                        ON h.CompanyId = c.CompanyId
+                                        WHERE h.BrokerId = {brokerId};", _connection);
             using var Reader = command.ExecuteReader();
             while (Reader.Read())
             {
@@ -78,12 +82,80 @@ namespace _0820_Brokers.Services
                     Area = Reader.GetDecimal(7),
                     BrokerId = Reader.GetInt32(8),
                     CompanyId = Reader.GetInt32(9),
-                    FullAddress = Reader.GetString(10)
+                    FullAddress = Reader.GetString(10),
+                    CompanyName = Reader.GetString(11),
+                    Broker = Reader.GetString(12)
                 });
             }
             _connection.Close();
             return brokerAppartments;
         }
 
+        public void RemoveAppartmentFromBroker(int houseId)
+        {
+            _connection.Open();
+            SqlCommand command = new($@"UPDATE Houses
+                                        SET BrokerId = NULL 
+                                        WHERE FlatId = {houseId};", _connection);
+            command.ExecuteNonQuery();
+            _connection.Close();
+        }
+
+        public void DeleteAppartment(int houseId)
+        {
+            _connection.Open();
+            SqlCommand command = new($@"DELETE FROM Houses
+                                        WHERE FlatId = {houseId};", _connection);
+            command.ExecuteNonQuery();
+            _connection.Close();
+        }
+        public List<HouseModel> GetHouseData(int houseId)
+        {
+            List<HouseModel> houses = new();
+            _connection.Open();
+            SqlCommand command = new($@"SELECT h.*, CONCAT(h.Street, ' ', h.HouseNo, '- ', h.FlatNo), c.Name, CONCAT(b.Name, ' ', b.Surname)
+                                        FROM Houses h
+                                        LEFT JOIN Companies c
+                                        ON h.CompanyId = c.CompanyId
+                                        LEFT JOIN Brokers b
+                                        ON h.BrokerId = b.BrokerId
+                                        WHERE h.FlatId = {houseId};", _connection);
+            using var Reader = command.ExecuteReader();
+            while (Reader.Read())
+            {
+                houses.Add(new()
+                {
+                    FlatId = Reader.GetInt32(0),
+                    City = Reader.GetString(1),
+                    Street = Reader.GetString(2),
+                    HouseNo = Reader.GetString(3),
+                    FlatNo = Reader.GetString(4),
+                    FlatFloor = Reader.GetInt32(5),
+                    BuildingFloors = Reader.GetInt32(6),
+                    Area = Reader.GetDecimal(7),
+                    CompanyId = Reader.GetInt32(9),
+                    FullAddress = Reader.GetString(10),
+                    CompanyName = Reader.GetString(11),
+                    Broker = Reader.GetString(12)
+                });
+            }
+            _connection.Close();
+            return houses;
+        }
+        public void EditInDatabase(HouseModel house)
+        {
+            _connection.Open();
+            SqlCommand command = new($@"UPDATE Houses 
+                                        SET City = '{house.City}', 
+	                                        Street = '{house.Street}', 
+	                                        HouseNo = '{house.HouseNo}',
+	                                        FlatNo = '{house.FlatNo}',
+	                                        FlatFloor = '{house.FlatFloor}',
+	                                        BuildingFloors = '{house.BuildingFloors}', 
+	                                        Area = '{house.Area}'
+                                        WHERE FlatId = {house.FlatId};", _connection);
+            command.ExecuteNonQuery();
+            _connection.Close();
+        }
     }
 }

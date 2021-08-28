@@ -35,7 +35,8 @@ namespace _0820_Brokers.Controllers
         public IActionResult DisplayPossibleAppartments(int brokerId)
         {
             List<HouseModel> houses = _brokerDBService.HousesBrokerCanChoose(brokerId);
-            BrokerHousesModel possibleHouses = new(houses, brokerId);
+            string brokerName = _brokerDBService.GetBrokerName(brokerId);
+            BrokerHousesModel possibleHouses = new(houses, brokerId, brokerName);
             return View("DisplayPossibleAppartments", possibleHouses);
         }
         public IActionResult AssignAppartmentToBroker(int houseId, int brokerId)
@@ -43,5 +44,15 @@ namespace _0820_Brokers.Controllers
             _brokerDBService.AssignAppartmentToBroker(houseId, brokerId);
             return RedirectToAction("ListBrokerAppartments", "House", new { brokerId = brokerId } );
         }
+        public IActionResult DisplayEditBroker(int brokerId)
+        {
+            BrokerModel broker = _brokerDBService.GetBrokerData(brokerId);
+            return View("Edit", broker);
+        }
+        public IActionResult EditBroker(BrokerModel broker)
+        {
+            _brokerDBService.EditBrokerInDatabase(broker);
+            return RedirectToAction("Index");
+        } 
     }
 }

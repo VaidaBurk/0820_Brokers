@@ -12,10 +12,12 @@ namespace _0820_Brokers.Controllers
     {
         private readonly CreateHouseDBService _createHouseDBService;
         private readonly HouseDBService _houseDBService;
-        public HouseController(CreateHouseDBService createHoueDBService, HouseDBService houseDBService)
+        private readonly BrokerDBService _brokerDBService;
+        public HouseController(CreateHouseDBService createHoueDBService, HouseDBService houseDBService, BrokerDBService brokerDBService)
         {
             _createHouseDBService = createHoueDBService;
             _houseDBService = houseDBService;
+            _brokerDBService = brokerDBService;
         }
         public IActionResult Index()
         {
@@ -35,9 +37,34 @@ namespace _0820_Brokers.Controllers
         public IActionResult ListBrokerAppartments(int brokerId)
         {
             List<HouseModel> houses = _houseDBService.GetBrokerAppartmentsFromDB(brokerId);
-            BrokerHousesModel brokerHouses = new(houses, brokerId);
+            string brokerName = _brokerDBService.GetBrokerName(brokerId);
+            BrokerHousesModel brokerHouses = new(houses, brokerId, brokerName);
             return View(brokerHouses);
         }
-
+        public IActionResult RemoveAppartmentFromBroker(int houseId, int brokerId)
+        {
+            _houseDBService.RemoveAppartmentFromBroker(houseId);
+            return RedirectToAction("ListBrokerAppartments", new { brokerId });
+        }
+        public IActionResult DeleteAppartment(int houseId)
+        {
+            _houseDBService.DeleteAppartment(houseId);
+            return RedirectToAction("Index");
+        }
+        public IActionResult DetailAppartment(int houseId)
+        {
+            HouseModel house = _houseDBService.GetHouseData(houseId).FirstOrDefault();
+            return View("Details", house);
+        }
+        public IActionResult DisplayEditAppartment(int houseId)
+        {
+            HouseModel house = _houseDBService.GetHouseData(houseId).FirstOrDefault();
+            return View("Edit", house);
+        }
+        public IActionResult EditAppartment(HouseModel house)
+        {
+            _houseDBService.EditInDatabase(house);
+            return RedirectToAction("DetailAppartment", new { houseId = house.FlatId });
+        }
     }
 }

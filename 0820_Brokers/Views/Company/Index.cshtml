@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>List of companies in database</h1>
+<h1>Companies</h1>
 
 <p>
     <a asp-action="DisplayCreate">Add New Company</a>
@@ -14,7 +14,6 @@
         <tr>
             <th>Name</th>
             <th>Address</th>
-            <th>Id</th>
             <th></th>
         </tr>
     </thead>
@@ -28,10 +27,9 @@
                 @Html.DisplayFor(modelItem => item.StreetAddress)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CompanyId)
-            </td>
-            <td>
-                @Html.ActionLink("Add Broker", "DisplayAddBroker", new { companyId = item.CompanyId })
+                @Html.ActionLink("Add Broker", "DisplayAddBroker", new { companyId = item.CompanyId }) |
+                @Html.ActionLink("Show Brokers", "ListCompanyBrokers", new { companyId = item.CompanyId }) |
+                @Html.ActionLink("Show Appartments", "ListCompanyAppartments", new { companyId = item.CompanyId })
             </td>
         </tr>
 }

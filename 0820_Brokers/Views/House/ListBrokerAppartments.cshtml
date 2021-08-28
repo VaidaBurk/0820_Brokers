@@ -3,35 +3,39 @@
 @{
     ViewData["Title"] = "Index";
 }
-<h1>Appartments</h1>
+<h1>Appartments of @Model.BrokerName</h1>
 
-@Html.ActionLink("Assign Appartment to Broker", "DisplayPossibleAppartments", "Broker", new { brokerId = Model.BrokerId })
+<p>
+    @Html.ActionLink("Assign New Appartment to Broker", "DisplayPossibleAppartments", "Broker", new { brokerId = Model.BrokerId })
+</p>
 
 <table class="table">
     <thead>
         <tr>
             <th>City</th>
             <th>Address</th>
+            <th>Company</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model.Houses)
         {
-            <tr>
+        <tr>
 
-                <td>
-                    @Html.DisplayFor(modelItem => item.City)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FullAddress)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-                </td>
-            </tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.City)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FullAddress)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CompanyName)
+            </td>
+            <td>
+                @Html.ActionLink("Remove", "RemoveAppartmentFromBroker", new { houseId=item.FlatId, brokerId=item.BrokerId })
+            </td>
+        </tr>
         }
     </tbody>
 </table>
