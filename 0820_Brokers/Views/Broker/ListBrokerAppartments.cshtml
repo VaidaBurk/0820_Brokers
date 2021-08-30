@@ -4,9 +4,12 @@
     ViewData["Title"] = "Index";
 }
 <h1>Appartments of @Model.BrokerName</h1>
-
 <p>
-    @Html.ActionLink("Assign New Appartment to Broker", "DisplayPossibleAppartments", "Broker", new { brokerId = Model.BrokerId })
+    <a asp-action="Index">Back To Brokers List</a>
+</p>
+<p>
+
+    @Html.ActionLink("Assign New Appartment to Broker", "DisplayPossibleAppartments", "Broker", new { brokerId = Model.BrokerId }, new { @class = "btn btn-sm btn-outline-primary mt-2 mb-2" })
 </p>
 
 <table class="table">

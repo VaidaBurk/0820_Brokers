@@ -13,16 +13,38 @@ namespace _0820_Brokers.Controllers
         private readonly CreateHouseDBService _createHouseDBService;
         private readonly HouseDBService _houseDBService;
         private readonly BrokerDBService _brokerDBService;
-        public HouseController(CreateHouseDBService createHoueDBService, HouseDBService houseDBService, BrokerDBService brokerDBService)
+        private readonly HouseFilterDBService _houseFilterDBService;
+        public HouseController(CreateHouseDBService createHoueDBService, HouseDBService houseDBService, BrokerDBService brokerDBService, HouseFilterDBService houseFilterDBService)
         {
             _createHouseDBService = createHoueDBService;
             _houseDBService = houseDBService;
             _brokerDBService = brokerDBService;
+            _houseFilterDBService = houseFilterDBService;
         }
         public IActionResult Index()
         {
-            List<HouseModel> houses = _houseDBService.GetData();
-            return View(houses);
+            HouseFilterModel housesFromDb = _houseFilterDBService.GetData();
+            return View(housesFromDb);
+        }
+        public IActionResult ListFiltered(HouseFilterModel model)
+        {
+            HouseFilterModel filteredHouses = _houseFilterDBService.GetData();
+            if(model.FilterByCityName != null)
+            {
+                filteredHouses = _houseFilterDBService.GetFilteredByCityData(model.FilterByCityName);
+                return View("Index", filteredHouses);
+            }
+            if (model.FilterByCompanyId != 0)
+            {
+                filteredHouses = _houseFilterDBService.GetFilteredByCompanyData(model.FilterByCompanyId);
+                return View("Index", filteredHouses);
+            }
+            if (model.FilterByBrokerId != 0)
+            {
+                filteredHouses = _houseFilterDBService.GetFilteredByBrokerData(model.FilterByBrokerId);
+                return View("Index", filteredHouses);
+            }
+            return RedirectToAction("Index");
         }
         public IActionResult DisplayCreate()
         {
@@ -34,13 +56,7 @@ namespace _0820_Brokers.Controllers
             _houseDBService.SaveToDatabase(house);
             return RedirectToAction("Index");
         }
-        public IActionResult ListBrokerAppartments(int brokerId)
-        {
-            List<HouseModel> houses = _houseDBService.GetBrokerAppartmentsFromDB(brokerId);
-            string brokerName = _brokerDBService.GetBrokerName(brokerId);
-            BrokerHousesModel brokerHouses = new(houses, brokerId, brokerName);
-            return View(brokerHouses);
-        }
+
         public IActionResult RemoveAppartmentFromBroker(int houseId, int brokerId)
         {
             _houseDBService.RemoveAppartmentFromBroker(houseId);

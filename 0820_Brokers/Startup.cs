@@ -32,6 +32,7 @@ namespace _0820_Brokers
             services.AddScoped<CreateCompanyDBService>();
             services.AddScoped<CreateHouseDBService>();
             services.AddScoped<HouseDBService>();
+            services.AddScoped<HouseFilterDBService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
