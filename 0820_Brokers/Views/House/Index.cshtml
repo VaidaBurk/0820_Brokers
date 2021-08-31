@@ -2,31 +2,20 @@
 
 <h1>Appartments</h1>
 <form asp-action="ListFiltered" method="post">
-    <div class="row">
-
-        <div class="form-group ml-3">
+    <div class="row mt-3">
+        <div class="form-group ml-2">
             @Html.DropDownListFor(model => model.FilterByCityName, new SelectList(Model.Cities), "All Cities", new { @class = "form-control-sm" })
         </div>
-        <div>
-            <input type="submit" value="Filter by City" class="btn btn-sm btn-outline-primary ml-1" />
-        </div>
-
-        <div class="form-group ml-3">
+        <div class="form-group ml-2">
             @Html.DropDownListFor(model => model.FilterByCompanyId, new SelectList(Model.Companies, "CompanyId", "Name"), "All Companies", new { @class = "form-control-sm" })
         </div>
-        <div>
-            <input type="submit" value="Filter by Company" class="btn btn-sm btn-outline-primary ml-1" />
-        </div>
-
-        <div class="form-group ml-3">
+        <div class="form-group ml-2">
             @Html.DropDownListFor(model => model.FilterByBrokerId, new SelectList(Model.Brokers, "BrokerId", "FullName"), "All Brokers", new { @class = "form-control-sm" })
         </div>
         <div>
-            <input type="submit" value="Filter by Broker" class="btn btn-sm btn-outline-primary ml-1" />
+            <input type="submit" value="Filter" class="btn btn-sm btn-outline-primary ml-2" />
         </div>
-
     </div>
-
 </form>
 
 <p>

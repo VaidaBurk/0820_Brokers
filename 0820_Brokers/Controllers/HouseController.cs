@@ -1,10 +1,7 @@
 ﻿using _0820_Brokers.Models;
 using _0820_Brokers.Services;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace _0820_Brokers.Controllers
 {
@@ -12,37 +9,24 @@ namespace _0820_Brokers.Controllers
     {
         private readonly CreateHouseDBService _createHouseDBService;
         private readonly HouseDBService _houseDBService;
-        private readonly BrokerDBService _brokerDBService;
         private readonly HouseFilterDBService _houseFilterDBService;
-        public HouseController(CreateHouseDBService createHoueDBService, HouseDBService houseDBService, BrokerDBService brokerDBService, HouseFilterDBService houseFilterDBService)
+        public HouseController(CreateHouseDBService createHoueDBService, HouseDBService houseDBService, HouseFilterDBService houseFilterDBService)
         {
             _createHouseDBService = createHoueDBService;
             _houseDBService = houseDBService;
-            _brokerDBService = brokerDBService;
             _houseFilterDBService = houseFilterDBService;
         }
         public IActionResult Index()
         {
-            HouseFilterModel housesFromDb = _houseFilterDBService.GetData();
-            return View(housesFromDb);
+            HouseFilterModel houses = _houseFilterDBService.GetData();
+            return View(houses);
         }
         public IActionResult ListFiltered(HouseFilterModel model)
         {
-            HouseFilterModel filteredHouses = _houseFilterDBService.GetData();
-            if(model.FilterByCityName != null)
+            if (model.FilterByCityName != null || model.FilterByCompanyId != 0 || model.FilterByBrokerId != 0)
             {
-                filteredHouses = _houseFilterDBService.GetFilteredByCityData(model.FilterByCityName);
-                return View("Index", filteredHouses);
-            }
-            if (model.FilterByCompanyId != 0)
-            {
-                filteredHouses = _houseFilterDBService.GetFilteredByCompanyData(model.FilterByCompanyId);
-                return View("Index", filteredHouses);
-            }
-            if (model.FilterByBrokerId != 0)
-            {
-                filteredHouses = _houseFilterDBService.GetFilteredByBrokerData(model.FilterByBrokerId);
-                return View("Index", filteredHouses);
+                HouseFilterModel filteredData = _houseFilterDBService.GetFilteredByThreeParameters(model);
+                return View("Index", filteredData);
             }
             return RedirectToAction("Index");
         }
@@ -56,7 +40,6 @@ namespace _0820_Brokers.Controllers
             _houseDBService.SaveToDatabase(house);
             return RedirectToAction("Index");
         }
-
         public IActionResult RemoveAppartmentFromBroker(int houseId, int brokerId)
         {
             _houseDBService.RemoveAppartmentFromBroker(houseId);

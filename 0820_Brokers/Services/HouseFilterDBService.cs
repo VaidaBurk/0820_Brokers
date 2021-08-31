@@ -1,8 +1,4 @@
 ﻿using _0820_Brokers.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace _0820_Brokers.Services
 {
@@ -27,35 +23,34 @@ namespace _0820_Brokers.Services
                 Cities = HouseDBService.GetAllCities()
             };
         }
-        public HouseFilterModel GetFilteredByCityData(string cityName)
+        public HouseFilterModel GetFilteredByThreeParameters(HouseFilterModel model)
         {
+            string sqlCommand = GenerateWhereClause(model);
             return new HouseFilterModel()
             {
-                Houses = HouseDBService.GetFilteredByCity(cityName),
+                Houses = HouseDBService.GetFilteredByThreeParameters(sqlCommand),
                 Companies = CompanyDBService.GetData(),
                 Brokers = BrokerDBService.GetData(),
                 Cities = HouseDBService.GetAllCities()
             };
         }
-        public HouseFilterModel GetFilteredByCompanyData(int companyId)
+        public string GenerateWhereClause(HouseFilterModel model)
         {
-            return new HouseFilterModel()
+            string sqlCommand = "";
+            sqlCommand += " WHERE 1=1 ";
+            if (model.FilterByCityName != null)
             {
-                Houses = HouseDBService.GetFilteredByCompany(companyId),
-                Companies = CompanyDBService.GetData(),
-                Brokers = BrokerDBService.GetData(),
-                Cities = HouseDBService.GetAllCities()
-            };
-        }
-        public HouseFilterModel GetFilteredByBrokerData(int brokerId)
-        {
-            return new HouseFilterModel()
+                sqlCommand += $" AND h.City = '{model.FilterByCityName}'";
+            }
+            if (model.FilterByCompanyId != 0)
             {
-                Houses = HouseDBService.GetFilteredByBroker(brokerId),
-                Companies = CompanyDBService.GetData(),
-                Brokers = BrokerDBService.GetData(),
-                Cities = HouseDBService.GetAllCities()
-            };
+                sqlCommand += $" AND h.CompanyId = {model.FilterByCompanyId}";
+            }
+            if (model.FilterByBrokerId != 0)
+            {
+                sqlCommand += $" AND h.BrokerId = {model.FilterByBrokerId}";
+            }
+            return sqlCommand;
         }
     }
 }
